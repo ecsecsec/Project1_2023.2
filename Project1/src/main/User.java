@@ -1,5 +1,7 @@
 package main;
 
+import java.util.List;
+
 public abstract class User {
 
 	private int userID;
@@ -8,12 +10,11 @@ public abstract class User {
 	private int userAge;
 	private int userPhone;
 	private String userEmail;
+	private List<Event> events;
+	
 	
 	public int getUserID() {
 		return userID;
-	}
-	public void setUserID(int userID) {
-		this.userID = userID;
 	}
 	public String getUserName() {
 		return userName;
@@ -38,12 +39,20 @@ public abstract class User {
 	}
 	public void setUserEmail(String userEmail) {
 		this.userEmail = userEmail;
-	}	public String getPassword() {
+	}
+	public String getPassword() {
 		return password;
 	}
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	public List<Event> getEvents() {
+		return events;
+	}
+	public void setEvents(List<Event> events) {
+		this.events = events;
+	}
+
 	
 	public User(int userID, String userName, String password, int userPhone, String userEmail) {
 		super();
@@ -52,9 +61,9 @@ public abstract class User {
 		this.userPhone = userPhone;
 		this.userEmail = userEmail;
 	}
-	public User(int userID, String userName, String password, int userAge, int userPhone, String userEmail) {
+	public User( String userName, String password, int userAge, int userPhone, String userEmail) {
 		super();
-		this.userID = userID;
+		
 		this.userName = userName;
 		this.userAge = userAge;
 		this.userPhone = userPhone;
