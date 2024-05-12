@@ -76,5 +76,14 @@ public abstract class User {
 		this.userPhone = userPhone;
 		this.userEmail = userEmail;
 	}
-
+	
+	public boolean equalUser(String name, String password) {
+		boolean equal = false;
+		if(this.userName.equals(name) && this.password.equals(password)) {
+			equal = true;
+		}else if(this.userName.equals(name) && !this.password.equals(password)) {
+			System.out.println("The password that you've entered is incorrect.");
+		}
+		return equal;
+	}
 }
