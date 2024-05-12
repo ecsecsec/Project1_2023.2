@@ -61,6 +61,13 @@ public abstract class User {
 		this.userPhone = userPhone;
 		this.userEmail = userEmail;
 	}
+	public User(int userID, String userName, String password,int userAge, int userPhone, String userEmail) {
+		super();
+		this.userID = userID;
+		this.userName = userName;
+		this.userPhone = userPhone;
+		this.userEmail = userEmail;
+	}
 	public User( String userName, String password, int userAge, int userPhone, String userEmail) {
 		super();
 		
