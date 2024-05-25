@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class dbConnection {
-	private static String DB_URL = "jdbc:mysql://127.0.0.1:3306/testdb";
+	private static String DB_URL = "jdbc:mysql://127.0.0.1:3306/eventmanagementapp";
     private static String USER_NAME = "root";
     private static String PASSWORD = "1nhamrnhis2";
     
