@@ -10,12 +10,11 @@ public class dbConnection {
     private static String USER_NAME = "root";
     private static String PASSWORD = "1nhamrnhis2";
     
-    public static Connection getConnection(String dbURL, String userName, 
-            String password) {
+    public static Connection getConnection() {
         Connection conn = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection(dbURL, userName, password);
+            conn = DriverManager.getConnection(DB_URL, USER_NAME, PASSWORD);
             System.out.println("connect successfully!");
         } catch (Exception ex) {
             System.out.println("connect failure!");
