@@ -40,4 +40,21 @@ public class dbConnection {
             e.printStackTrace();
         }
     }
+    public void updateJoinUser(String table, int user_id, int event_id ){
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER_NAME, PASSWORD)) {
+            String addEvent = "UPDATE ? SET `join` = 1 WHERE user_id = ? AND event_id = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(addEvent)) {
+                pstmt.setString(1, table);
+                pstmt.setString(2, String.valueOf(user_id));
+                pstmt.setString(3,String.valueOf(event_id));
+                pstmt.executeUpdate();
+                System.out.println("Join Successfully");
+            }
+
+
+        } catch (SQLException e) {
+            System.out.print("Syntax error");
+            e.printStackTrace();
+        }
+    }
 }

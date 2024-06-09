@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="300.0" prefWidth="100.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21">
+   <children>
+      <VBox layoutX="10.0" layoutY="10.0" prefHeight="400.0" prefWidth="1000.0">
+         <children>
+            <Label fx:id="lblEventName" text="EventName">
+               <padding>
+                  <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+               </padding>
+            </Label>
+            <Label fx:id="lblIsPrivate" text="-Private-">
+               <padding>
+                  <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+               </padding>
+               <font>
+                  <Font name="System Italic" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblTime" text="Time">
+               <padding>
+                  <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+               </padding>
+            </Label>
+            <Label fx:id="lblLocation" text="Location">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+               </VBox.margin>
+            </Label>
+            <Label fx:id="lblDescription" text="Description">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+               </VBox.margin>
+            </Label>
+            <ScrollPane prefHeight="265.0" prefWidth="1000.0">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="275.0" prefWidth="1000.0">
+                     <children>
+                        <TableView prefHeight="270.0" prefWidth="1000.0">
+                          <columns>
+                            <TableColumn fx:id="colUserID" prefWidth="135.99999409914017" text="User_ID" />
+                            <TableColumn fx:id="colRequest" prefWidth="863.2000122070312" text="Request" />
+                          </columns>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </ScrollPane>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

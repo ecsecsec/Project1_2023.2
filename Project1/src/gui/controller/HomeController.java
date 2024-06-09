@@ -23,6 +23,114 @@ public class HomeController {
 		super();
 		this.user = user;
 		this.eventList = new EventList();
+		
+	}
+	@FXML
+    private Button btnNewEvent;
+
+    @FXML
+    private Button btnPrivateEvent;
+
+    @FXML
+    private Button btnUserEvent;
+
+    @FXML
+    private Button btngManagerEvent;
+
+    @FXML
+    private GridPane gridPaneEvent;
+
+    @FXML
+    void btnManagerEventClicked(ActionEvent evt) {
+    	gridPaneEvent.getChildren().clear();
+    	final String ITEM_FXML = "/gui/view/ManagerItem.fxml";
+    	int col = 0;
+    	int row = 1;
+    	int num = this.eventList.getItems().size();
+    	for(int i = 0; i < num; i++) {
+    		try {
+    			FXMLLoader fxmlLoader = new FXMLLoader();
+    			fxmlLoader.setLocation(getClass().getResource(ITEM_FXML));
+    			ManagerItemController managerController = new ManagerItemController(user);
+    			fxmlLoader.setController(managerController);
+    			
+    			AnchorPane anchorPane = new AnchorPane();
+    			anchorPane = fxmlLoader.load();
+    			managerController.setData(eventList.getItems().get(i));
+    			
+    			 if(col == 1) {
+    				 col = 0;
+    				 row++;
+    			 }
+    			 gridPaneEvent.add(anchorPane, col++, row);
+    			 GridPane.setMargin(anchorPane, new Insets(20, 0, 0, 0));
+    		}catch(IOException e) {
+    			e.printStackTrace();
+    		}
+    	}
+    }
+
+    @FXML
+    void btnUserEventClicked(ActionEvent evt) {
+
+    }
+
+    @FXML
+    void imgPrivateEventClicked(ActionEvent evt) {
+		try {
+        	dbConnection con = new dbConnection();
+        	Connection c = con.getConnection();
+        	String sql = "SELECT * FROM `event`";
+            //String sql = "SELECT * FROM `event` join user_event on event.event_id != user_event.event_id where user_event.user_id = ?";
+            PreparedStatement st = c.prepareStatement(sql);
+            //st.setInt(1, this.user.getUserID());
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                Event event = new Event();
+                event.setEventID(rs.getInt(1));
+                event.setEventName(rs.getString(12));
+	        	event.setLocation(rs.getString(7));
+	        	event.setDescription(rs.getString(4));
+	        	event.setPrivate(rs.getBoolean(3));
+                this.eventList.addEvent(event);       
+            }
+ 
+        } catch (Exception ex) {
+            System.out.println("Connect failure!");
+            ex.printStackTrace();
+        }
+    	
+    	gridPaneEvent.getChildren().clear();
+    	final String ITEM_FXML = "/gui/view/InvitedItem.fxml";
+    	int col = 0;
+    	int row = 1;
+    	int num = this.eventList.getItems().size();
+    	for(int i = 0; i < num; i++) {
+    		try {
+    			FXMLLoader fxmlLoader = new FXMLLoader();
+    			fxmlLoader.setLocation(getClass().getResource(ITEM_FXML));
+    			InvitedItemController invitedController = new InvitedItemController(user);
+    			fxmlLoader.setController(invitedController);
+    			
+    			AnchorPane anchorPane = new AnchorPane();
+    			anchorPane = fxmlLoader.load();
+    			invitedController.setData(eventList.getItems().get(i));
+    			
+    			 if(col == 1) {
+    				 col = 0;
+    				 row++;
+    			 }
+    			 gridPaneEvent.add(anchorPane, col++, row);
+    			 GridPane.setMargin(anchorPane, new Insets(20, 0, 0, 0));
+    			 
+    		}catch(Exception e) {
+    			e.printStackTrace();
+    		}
+    	}
+    }
+
+    @FXML
+    void imgNewEventClicked(ActionEvent evt) {
 		//
 		try {
         	dbConnection con = new dbConnection();
@@ -46,37 +154,7 @@ public class HomeController {
             System.out.println("Connect failure!");
             ex.printStackTrace();
         }
-		
-		
-		
-		
-	}
-	public void initialize() {
-	 	
-	}
-	@FXML
-    private Button btnNewEvent;
-
-    @FXML
-    private Button btnUserEvent;
-
-    @FXML
-    private Button btngManagerEvent;
-
-    @FXML
-    private GridPane gridPaneEvent;
-    @FXML
-    void btnManagerEventClicked(ActionEvent event) {
-    	
-    }
-
-    @FXML
-    void btnUserEventClicked(ActionEvent event) {
-
-    }
-
-    @FXML
-    void imgNewEventClicked(ActionEvent event) {
+    	gridPaneEvent.getChildren().clear();
     	final String ITEM_FXML = "/gui/view/EventItem.fxml";
     	int col = 0;
     	int row = 1;
@@ -106,3 +184,4 @@ public class HomeController {
 
 
 }
+
