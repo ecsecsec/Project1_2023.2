@@ -188,7 +188,7 @@ public class SQLconnect {
             }
 
             String deleteListEvent = "DELETE FROM user_event WHERE user_id = ? AND event_id = ?";
-            try (PreparedStatement pstmt = conn.prepareStatement(addEvent)) {
+            try (PreparedStatement pstmt = conn.prepareStatement(deleteListEvent)) {
                 pstmt.setString(1, String.valueOf(user_id));
                 pstmt.setString(2,String.valueOf(event_id));
                 pstmt.executeUpdate();
