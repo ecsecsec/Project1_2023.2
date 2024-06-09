@@ -1,124 +1,75 @@
 package main;
 
-import java.awt.*;
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.*;
-
 import database.dbConnection;
-
 import java.sql.*;
 
+public class LogIn {
+	private String username;
+	private String password;
+	private User user;
+	private int count;
+	public LogIn(String username, String pass) {
+		this.username = username;
+		this.password = pass;
+		this.count = 0;
+		try {
+			dbConnection con = new dbConnection();
+			Connection c = con.getConnection();
+            String sql1 = "SELECT COUNT(*) FROM `user` WHERE name = ?";
+            PreparedStatement st = c.prepareStatement(sql1);
+            st.setString(1, this.getUsername());
+            ResultSet rs = st.executeQuery();
+            rs.next();
+            //count = 0 -> dont exist, count == 1 -> exist, count = 2 -> exist but wrong pass
+            if(rs.getInt(1) == 1) {
+            	String sq2 = "SELECT COUNT(*) FROM `user` WHERE name = ? AND password = ?";
+                PreparedStatement st2 = c.prepareStatement(sq2);
+                st2.setString(1, this.getUsername());
+                st2.setString(2, this.getPassword());
+                ResultSet rs2 = st2.executeQuery();
+                rs2.next();
+                if(rs2.getInt(1) == 1) {
+                	this.count = 1;
+                	String sql3 = "SELECT * FROM `user` WHERE name = ? AND password = ?";
+                    PreparedStatement st3 = c.prepareStatement(sql3);
+                    st3.setString(1, this.getUsername());
+                    st3.setString(2, this.getPassword());
+                    ResultSet rs3 = st3.executeQuery();
+                    rs3.next();
+          
+                    this.user.setUserID(rs3.getInt(1));
+                    this.user.setUserName(rs3.getString(2));
+                    this.user.setUserAge(rs3.getInt(3));
+                    this.user.setUserPhone(rs3.getInt(4));
+                    this.user.setUserEmail(rs3.getString(5));
+                    this.user.setPassword(rs3.getString(6));
+                    
+                    
+                }else {
+                	this.count = 2;
+                }
+            }
 
-public class LogIn extends JFrame implements ActionListener{
-	private JPanel panel;
-	private JTextField username;
-	private JPasswordField password;
-	private JButton b1, b2, b3;
-	
-	public LogIn() {
-		
-		setBackground(new Color(255, 255, 204));
-		setBounds(550, 250, 700, 400);
-		
-		panel = new JPanel();
-	
-		setContentPane(panel);
-		panel.setLayout(null);
-		
-		JLabel l1 = new JLabel("UserName: ");
-		l1.setBounds(124, 89, 95, 24 );
-		panel.add(l1);
-		
-		JLabel l2 = new JLabel("Password: ");
-		l2.setBounds(124, 124, 95, 24 );
-		panel.add(l2);
-		
-		username = new JTextField();
-		username.setBounds(210, 93, 157, 20);
-		panel.add(username);
-		
-		password = new JPasswordField();
-		password.setBounds(210, 128, 157, 20);
-		panel.add(password);
-		
-		JLabel l3 = new JLabel("");
-		l3.setBounds(377, 79, 46, 34);
-		panel.add(l3);
-
-		JLabel l4 = new JLabel("");
-		l4.setBounds(377, 124, 46, 34);
-		panel.add(l4);
-		
-		b1 = new JButton("Log In");
-		b1.addActionListener(this);
-		
-		b1.setForeground(new Color(255, 255, 255));
-		b1.setBackground(new Color(255,192,203));
-		b1.setBounds(149, 181, 113, 25);
-		panel.add(b1);
-		
-		b2 = new JButton("Sign Up");
-		b2.addActionListener(this);
-		
-		b2.setForeground(new Color(255, 255, 255));
-		b2.setBackground(new Color(135,206,235));
-		b2.setBounds(289, 181, 113, 25);
-		panel.add(b2);
-		
-		b3 = new JButton("Forgot Password");
-		b3.addActionListener(this);
-		
-		b3.setForeground(new Color(255, 255, 255));
-		b3.setBackground(new Color(218,112,214));
-		b3.setBounds(199, 231, 179, 25);
-		panel.add(b3);
-		
-		JLabel l5 = new JLabel("Trouble in Login?");
-		l5.setFont(getFont());
-		l5.setForeground(new Color(199,21,133));
-		l5.setBounds(70, 235, 110, 20);
-		panel.add(l5);
-	}
-	@Override
-	public void actionPerformed(ActionEvent evt) {
-		
-		if(evt.getSource() == b1) {
-			boolean status = false;
-			try {
-				dbConnection con = new dbConnection();
-				Connection c = con.getConnection();
-				String sql = "select * from User where username = ? and password = ?";
-				PreparedStatement st = c.prepareStatement(sql);
-				st.setString(1, username.getText());
-				st.setString(2, password.getText());
-				
-				ResultSet rs = st.executeQuery();
-				if(rs.next()) {
-					this.setVisible(false);
-					new Loading(username.getText()).setVisible(true);
-					
-				}else {
-					JOptionPane.showMessageDialog(null, "Invalid Login!" );
-				}
-			}catch(Exception e) {
-				e.printStackTrace();
-			}
-		}else if(evt.getSource() == b2) {
-			setVisible(false);
-			SignUp s = new SignUp();
-			s.setVisible(true);
-			
-		}else if(evt.getSource() == b3) {
-			setVisible(false);
-			ForgotPassword forgot = new ForgotPassword();
-			forgot.setVisible(true);
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
-		
 	}
-	public static void main(String[] args) {
-		new LogIn().setVisible(true);
+	public String getUsername() {
+		return username;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public int getCount() {
+		return count;
+	}
+	public void setCount(int count) {
+		this.count = count;
+	}
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
 	}
 }

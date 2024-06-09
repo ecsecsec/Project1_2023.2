@@ -1,141 +1,75 @@
   package main;
 
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-
-import javax.swing.*;
-import javax.swing.border.*;
+import java.sql.ResultSet;
 
 import database.dbConnection;
 
-public class SignUp extends JFrame implements ActionListener {
-	private JPanel panel;
-	private JTextField username;
-	private JTextField email;
-	private JPasswordField password;
-	private JTextField age;
-	private JButton b1, b2;
+public class SignUp{
+	private String userName;
+	private String password;
+	private String email;
+	private int count; 
 
-	
-	
-	public SignUp() {
-		setBounds(600, 250, 700, 406);
-		panel = new JPanel();
-		panel.setBorder(new EmptyBorder(5,5,5,5));
-		setContentPane(panel);
-		panel.setBackground(Color.WHITE);
-		panel.setLayout(null);
-		
-		JLabel lbname = new JLabel("Username *");
-		lbname.setForeground(Color.DARK_GRAY);
-		lbname.setFont(getFont());
-		lbname.setBounds(100, 50, 100, 25);
-		panel.add(lbname);
-		
-		JLabel lbemail = new JLabel("Email *");
-		lbemail.setForeground(Color.DARK_GRAY);
-		lbemail.setFont(getFont());
-		lbemail.setBounds(100, 100, 100, 25);
-		panel.add(lbemail);
-		
-		JLabel lbpassword = new JLabel("Password *");
-		lbpassword.setForeground(Color.DARK_GRAY);
-		lbpassword.setFont(getFont());
-		lbpassword.setBounds(100, 150, 100, 25);
-		panel.add(lbpassword);
-		
-		JLabel lbage = new JLabel("Age");
-		lbage.setForeground(Color.DARK_GRAY);
-		lbage.setFont(getFont());
-		lbage.setBounds(100, 200, 100, 25);
-		panel.add(lbage);
-		
-		username = new JTextField();
-		username.setBounds(100, 75, 100, 25);
-		panel.add(username);
-		username.setColumns(10);
-		
-		email = new JTextField();
-		email.setBounds(100, 125, 100, 25);
-		email.setColumns(10);
-		panel.add(email);
-		
-		password = new JPasswordField();
-		password.setBounds(100, 175, 100, 25);
-		password.setColumns(10);
-		panel.add(password);
-		
-		age = new JTextField();
-		age.setBounds(100, 225, 100, 25);
-		age.setColumns(10);
-		panel.add(age);
-		
-		b1 = new JButton("Create");
-		b1.addActionListener(this);
-		b1.setFont(getFont());
-		b1.setBounds(140, 275, 100, 30);
-		b1.setBackground(Color.pink);
-		b1.setForeground(Color.DARK_GRAY);
-		panel.add(b1);
-		
-		b2 = new JButton("Back");
-		b2.addActionListener(this);
-		b2.setFont(getFont());
-		b2.setBounds(400, 275, 100, 30);
-		b2.setBackground(Color.pink);
-		b2.setForeground(Color.DARK_GRAY);
-		panel.add(b2);
-		
-		JPanel contentPanel = new JPanel();
-		contentPanel.setForeground(Color.green);
-		contentPanel.setBorder(new TitledBorder( new LineBorder(Color.green, 2), "Create-Account", TitledBorder.LEADING, TitledBorder.TOP, null, Color.green  ));
-		contentPanel.setBounds(30, 30, 640, 310);
-		contentPanel.setBackground(Color.WHITE);
-		panel.add(contentPanel);
-	}
-	
-	
-	
-	public static void main(String[] args) {
-		new SignUp().setVisible(true);
-	}
-	@Override
-	public void actionPerformed(ActionEvent evt) {
+	public SignUp(String userName, String email, String password) {
+		this.userName = userName;
+		this.password = password;
+		this.email = email;
+		this.count = 0;
 		try {
 			dbConnection con = new dbConnection();
 			Connection c = con.getConnection();
-			if(evt.getSource() == b1) {
-				String sql = "insert into user(username, email, password, age) value(?, ?, ?, ?)";
-				PreparedStatement st = c.prepareStatement(sql);
-				
-				st.setString(1, username.getText());
-				st.setString(2, email.getText());
-				st.setString(3, password.getText());
-				st.setString(4, age.getText());
-				
-				int i = st.executeUpdate();
-				if(i>0) {
-					JOptionPane.showMessageDialog(null, "Account Created Successfully!");
-					
-				}
-				username.setText("");
-				email.setText("");
-				password.setText("");
-				age.setText("");
-				
-			}else if(evt.getSource() == b2) {
-				this.setVisible(false);
-				new LogIn().setVisible(true);
-			}
-						
+            String sql1 = "SELECT COUNT(*) FROM `user` WHERE name = ?";
+            PreparedStatement st1 = c.prepareStatement(sql1);
+            st1.setString(1, this.getUserName());
+            ResultSet rs = st1.executeQuery();
+            rs.next();
+            if(rs.getInt(1) == 0) {
+            	this.count = 1;
+            	String sql2 = "insert into user(name, email, password) values(?, ?, ?) ";
+            	PreparedStatement st2 = c.prepareStatement(sql2);
+                st2.setString(1, this.getUserName());
+                st2.setString(2, this.getEmail());
+                st2.setString(3, this.getPassword());
+                int rowsInserted = st2.executeUpdate();
+                if (rowsInserted > 0) {
+                    System.out.println("Data inserted successfully!");
+                } else {
+                    System.out.println("Failed to insert data.");
+                }
+
+            }
+            
+            rs.close();
+            st1.close();
 		}catch(Exception e) {
-			System.out.println(e);
-			
+			e.printStackTrace();
 		}
 		
 	}
-
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public int getCount() {
+		return count;
+	}
+	public void setCount(int count) {
+		this.count = count;
+	}
 }

@@ -2,7 +2,9 @@ package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 public class dbConnection {
@@ -21,5 +23,21 @@ public class dbConnection {
             ex.printStackTrace();
         }
         return conn;
+    }
+    public void requestUser(int user_id, int event_id){
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER_NAME, PASSWORD)) {
+            String addEvent = "INSERT INTO request_user (user_id, event_id, requested, [join]) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement pstmt = conn.prepareStatement(addEvent)) {
+                pstmt.setString(1, String.valueOf(user_id));
+                pstmt.setString(2, String.valueOf(event_id));
+                pstmt.setInt(3, 1);
+                pstmt.setInt(4, 0);
+                pstmt.executeUpdate();
+                System.out.println("Request Successfully");
+            }
+        } catch (SQLException e) {
+            System.out.print("Syntax error");
+            e.printStackTrace();
+        }
     }
 }
