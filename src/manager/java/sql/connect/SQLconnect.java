@@ -62,16 +62,30 @@ public class SQLconnect {
 
     public void updateEvent(String column, String value, int event_id){
         try (Connection conn = DriverManager.getConnection(url, username, DBpassword)) {
-            String addEvent = "UPDATE event SET " + column + " = " + value + " WHERE event_id = ?";
+            String addEvent = "UPDATE event SET " + column + " = ? WHERE event_id = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(addEvent)) {
-                pstmt.setString(1, column);
-                pstmt.setString(2, value);
-                pstmt.setString(3, String.valueOf(event_id));
+                pstmt.setString(1, value);
+                pstmt.setInt(2, event_id);
                 pstmt.executeUpdate();
                 System.out.println("Update Event Successfully");
             }
         } catch (SQLException e) {
-            System.out.print("Syntax error");
+            System.out.print("Error occurred while updating event");
+            e.printStackTrace();
+        }
+    }
+
+    public void updateEvent(String column, int value, int event_id){
+        try (Connection conn = DriverManager.getConnection(url, username, DBpassword)) {
+            String addEvent = "UPDATE event SET " + column + " = ? WHERE event_id = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(addEvent)) {
+                pstmt.setInt(1, value);
+                pstmt.setInt(2, event_id);
+                pstmt.executeUpdate();
+                System.out.println("Update Event Successfully");
+            }
+        } catch (SQLException e) {
+            System.out.print("Error occurred while updating event");
             e.printStackTrace();
         }
     }
@@ -128,11 +142,11 @@ public class SQLconnect {
 
     }
 
-    public void listUserEvent(int host_id, int event_id){
+    public void listUserEvent(int user_id, int event_id){
         try (Connection conn = DriverManager.getConnection(url, username, DBpassword)) {
-            String addEvent = "INSERT INTO user_event (host_id, event_id) VALUES (?, ?)";
+            String addEvent = "INSERT INTO user_event (user_id, event_id) VALUES (?, ?)";
             try (PreparedStatement pstmt = conn.prepareStatement(addEvent)) {
-                pstmt.setString(1, String.valueOf(host_id));
+                pstmt.setString(1, String.valueOf(user_id));
                 pstmt.setString(2, String.valueOf(event_id));
                 pstmt.executeUpdate();
                 System.out.println("Add List Successfully");
@@ -154,6 +168,8 @@ public class SQLconnect {
                 pstmt.executeUpdate();
                 System.out.println("Join Successfully");
             }
+
+            listUserEvent(user_id, event_id);
         } catch (SQLException e) {
             System.out.print("Syntax error");
             e.printStackTrace();
@@ -168,13 +184,26 @@ public class SQLconnect {
                 pstmt.setString(2, String.valueOf(user_id));
                 pstmt.setString(3,String.valueOf(event_id));
                 pstmt.executeUpdate();
-                System.out.println("Join Successfully");
+                System.out.println("Unjoin Successfully");
             }
+
+            String deleteListEvent = "DELETE FROM user_event WHERE user_id = ? AND event_id = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(addEvent)) {
+                pstmt.setString(1, String.valueOf(user_id));
+                pstmt.setString(2,String.valueOf(event_id));
+                pstmt.executeUpdate();
+                System.out.println("Delete Successfully");
+            } catch (SQLException ignored){
+                System.out.print("Nothing here to delete");
+            }
+
         } catch (SQLException e) {
             System.out.print("Syntax error");
             e.printStackTrace();
         }
     }
+
+    
 
 
 }

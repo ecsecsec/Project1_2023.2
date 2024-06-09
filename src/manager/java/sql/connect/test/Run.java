@@ -13,6 +13,8 @@ public class Run {
 //        SQL.createEvent(1, 1, "Birthday",
 //               "2008-10-29 14:56:59", "Hanoi",
 //               "app", 20, 50, 20);
-        SQL.requestUser(2,1,1,0,0);
+//        SQL.requestUser(2,1,1,0);
+//        SQL.updateEvent("location", "hcm", 1);
+
     }
 }
