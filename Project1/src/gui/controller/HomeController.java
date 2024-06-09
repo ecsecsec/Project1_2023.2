@@ -23,6 +23,7 @@ public class HomeController {
 		super();
 		this.user = user;
 		this.eventList = new EventList();
+		//
 		try {
         	dbConnection con = new dbConnection();
         	Connection c = con.getConnection();
