@@ -8,7 +8,6 @@ import main.User;
 
 public class ManagerItemController {
 	private Event event;
-	private EventList eventList;
 	private User user;
 	
 	public ManagerItemController(User user) {
@@ -50,4 +49,5 @@ public class ManagerItemController {
     @FXML
     private Label lblTime;
 
+	
 }

@@ -19,7 +19,7 @@ public class EventItemController {
 		try {
         	dbConnection con = new dbConnection();
         	Connection c = con.getConnection();
-            String sql = "SELECT * FROM `event` where ";
+            String sql = "SELECT * FROM event";
             PreparedStatement st = c.prepareStatement(sql);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
@@ -51,13 +51,16 @@ public class EventItemController {
     private Button btnAccept;
 
     @FXML
-    private Button btnRequest;
+    private Button btnInvite;
 
     @FXML
     private Label lblDescription;
 
     @FXML
     private Label lblEventName;
+
+    @FXML
+    private Label lblIsPrivate;
 
     @FXML
     private Label lblLocation;
@@ -71,7 +74,7 @@ public class EventItemController {
     }
 
     @FXML
-    void btnRequestPressed(ActionEvent event) {
+    void btnInvitePressed(ActionEvent event) {
     	try {
     		dbConnection con = new dbConnection();
         	Connection c = con.getConnection();
@@ -80,5 +83,14 @@ public class EventItemController {
     		e.printStackTrace();
     	}
     }
-   
+
+	public void setEventList(EventList eventList) {
+		this.eventList = eventList;
+	}
+
+	public EventList getEventList() {
+		// TODO Auto-generated method stub
+		return eventList;
+	}
+
 }

@@ -36,7 +36,7 @@ public class LogIn {
                     st3.setString(2, this.getPassword());
                     ResultSet rs3 = st3.executeQuery();
                     rs3.next();
-          
+                    //Tạo user
                     this.user.setUserID(rs3.getInt(1));
                     this.user.setUserName(rs3.getString(2));
                     this.user.setUserAge(rs3.getInt(3));

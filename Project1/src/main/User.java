@@ -3,16 +3,6 @@ package main;
 import java.util.List;
 
 public abstract class User {
-
-	public User(int userID, String userName, String password, int userAge, int userPhone, String userEmail) {
-		super();
-		this.userID = userID;
-		this.userName = userName;
-		this.password = password;
-		this.userAge = userAge;
-		this.userPhone = userPhone;
-		this.userEmail = userEmail;
-	}
 	private int userID;
 	private String userName;
 	private String password;
@@ -24,6 +14,9 @@ public abstract class User {
 	
 	public int getUserID() {
 		return userID;
+	}
+	public void setUserID(int userID) {
+		this.userID = userID;
 	}
 	public String getUserName() {
 		return userName;
@@ -63,11 +56,22 @@ public abstract class User {
 	}
 
 
+	public User(int userID, String userName, String password, int userAge, int userPhone, String userEmail) {
+		super();
+		this.userID = userID;
+		this.userName = userName;
+		this.password = password;
+		this.userAge = userAge;
+		this.userPhone = userPhone;
+		this.userEmail = userEmail;
+	}
 	public User( String userName, String password) {
 		super();
 		this.userName = userName;
 		this.password = password;
 	}
+	
+	
 	
 	public boolean equalUser(String name, String password) {
 		boolean equal = false;
@@ -77,8 +81,5 @@ public abstract class User {
 			System.out.println("The password that you've entered is incorrect.");
 		}
 		return equal;
-	}
-	public void setUserID(int userID) {
-		this.userID = userID;
 	}
 }
