@@ -193,12 +193,12 @@ public class HomeController {
     	try {
     		FXMLLoader fxmlLoader = new FXMLLoader();
 			fxmlLoader.setLocation(getClass().getResource(ACC_FXML));
-			AccountController accController = new AccountController();
+			AccountController accController = new AccountController(user);
 			fxmlLoader.setController(accController);
 			
 			AnchorPane anchorPane = new AnchorPane();
 			anchorPane = fxmlLoader.load();
-			//accController.setData();
+			accController.setData(user);
 			
 			gridPaneEvent.add(anchorPane, col, row);
 			GridPane.setMargin(anchorPane, null);
@@ -215,10 +215,11 @@ public class HomeController {
     	try {
         	dbConnection con = new dbConnection();
         	Connection c = con.getConnection();
-            String sql = "SELECT * FROM event JOIN user_event ON event.event_id != user_event.event_id WHERE user_event.user_id = ?";
+            String sql = "SELECT * FROM event e WHERE (e.private_event = 0 AND e.event_id NOT IN (SELECT event_id FROM user_event WHERE user_id = ?)) OR (e.private_event = 1 AND e.event_id IN (SELECT event_id FROM invited_user WHERE user_id = ?))";
             //chưa fix
         	PreparedStatement st = c.prepareStatement(sql);
             st.setInt(1, this.user.getUserID());
+            st.setInt(2, user.getUserID());
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 Event event = new Event();

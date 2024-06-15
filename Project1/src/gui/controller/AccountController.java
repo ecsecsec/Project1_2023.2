@@ -6,10 +6,21 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
+import main.*;
 
 public class AccountController {
+	public AccountController(User user) {
+		super();
+		this.user = user;
+	}
+	private User user;
 	
-	
+	public void setData(User user) {
+    	this.user = user;
+    	lblUserName.setText(user.getUserName());
+    	lblEmail.setText(user.getUserEmail());
+    	lblPhoneNumber.setText(String.valueOf(user.getUserPhone()));
+}
 	@FXML
     private Button btnSUbmit;
 
