@@ -12,12 +12,9 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import main.EventList;
-import main.LogIn;
-import main.User;
+import main.*;
 
 public class LogInController {
-	private EventList eventList;
 	private User user;
 	public LogInController() {
 		super();
@@ -47,13 +44,13 @@ public class LogInController {
 	@FXML
 	void btnLoginPressed(ActionEvent event) throws SQLException {
 	    LogIn login = new LogIn(nameField.getText(), passwordField.getText());
-
+	    this.user = login;
 	    if (login.getCount() == 1) {
 	        try {
 	        	
 	            final String HOME = "/gui/view/Home.fxml";
 	            FXMLLoader fxml = new FXMLLoader(getClass().getResource(HOME));
-	            HomeController homeController = new HomeController(login.getUser()); // Pass the eventList object
+	            HomeController homeController = new HomeController(user); // Pass the eventList object
 	            fxml.setController(homeController);
 	            Parent root = fxml.load();
 

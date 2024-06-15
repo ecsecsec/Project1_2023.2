@@ -16,27 +16,8 @@ public class EventItemController {
 	private EventList eventList;
 	private User user;
 	public EventItemController(User user) {
-		try {
-        	dbConnection con = new dbConnection();
-        	Connection c = con.getConnection();
-            String sql = "SELECT * FROM event";
-            PreparedStatement st = c.prepareStatement(sql);
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                Event event = new Event();
-                event.setEventID(rs.getInt(1));
-                event.setEventName(rs.getString(12));
-	        	event.setLocation(rs.getString(7));
-	        	event.setDescription(rs.getString(4));
-	        	event.setPrivate(rs.getBoolean(3));
-                this.eventList.addEvent(event);       
-            }
- 
-        } catch (Exception ex) {
-            System.out.println("Connect failure!");
-            ex.printStackTrace();
-        }
-		this.user = user;		
+		this.user = user;
+				
 	}
 	
 	public void setData(Event event) {
