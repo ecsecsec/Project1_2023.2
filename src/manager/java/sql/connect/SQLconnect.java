@@ -2,6 +2,12 @@ package manager.java.sql.connect;
 
 import java.sql.*;
 
+import manager.java.encryption.Encrytion;
+import manager.java.encryption.hash;
+
+import javax.crypto.SecretKey;
+
+
 public class SQLconnect {
     private static String url = "jdbc:mysql://localhost:3306/eventmanager";
     private static String username = "root";
@@ -22,8 +28,8 @@ public class SQLconnect {
             String addUser = "INSERT INTO user (name, age, phone, email, password) VALUES (?, ?, ?, ?, ?)";
             try (PreparedStatement pstmt = conn.prepareStatement(addUser)) {
                 pstmt.setString(1, userName);
-                pstmt.setString(2, String.valueOf(age));
-                pstmt.setString(3, String.valueOf(phone));
+                pstmt.setString(2, String.valueOf(age));;
+                pstmt.setString(3, String.valueOf(phone));;
                 pstmt.setString(4, email);
                 pstmt.setString(5, password);
                 pstmt.executeUpdate();
@@ -38,21 +44,25 @@ public class SQLconnect {
 
 
 
-    public void createEvent(int manager_id, int private_event, String description, String start_time, String location, String link_app_event, int min_num_att, int max_num_att, int num_org){
+    public void createEvent(int host_id, int private_event, String description, String start_time, String end_time, String location, String link_app_event, int min_num_att, int max_num_att, int num_org){
         try (Connection conn = DriverManager.getConnection(url, username, DBpassword)) {
-            String addEvent = "INSERT INTO event (host_id, private_event, description, start_time, end_time, location, link_app_event, min_num_att, max_num_att, num_org) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+            String addEvent = "INSERT INTO event (host_id, private_event, description, start_time, end_time, location, link_app_event, min_num_att, max_num_att, num_org) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             try (PreparedStatement pstmt = conn.prepareStatement(addEvent)) {
-                pstmt.setString(1, String.valueOf(manager_id));
+                pstmt.setString(1, String.valueOf(host_id));
                 pstmt.setString(2, String.valueOf(private_event));
                 pstmt.setString(3, description);
                 pstmt.setString(4, start_time);
-                pstmt.setString(5, location);
-                pstmt.setString(6, link_app_event);
-                pstmt.setString(7, String.valueOf(min_num_att));
-                pstmt.setString(8, String.valueOf(max_num_att));
-                pstmt.setString(9, String.valueOf(num_org));
+                pstmt.setString(5, end_time);
+                pstmt.setString(6, location);
+                pstmt.setString(7, link_app_event);
+                pstmt.setString(8, String.valueOf(min_num_att));
+                pstmt.setString(9, String.valueOf(max_num_att));
+                pstmt.setString(10, String.valueOf(num_org));
                 pstmt.executeUpdate();
                 System.out.println("Create Event Successfully");
+
             }
         } catch (SQLException e) {
             System.out.print("Syntax error");
@@ -92,7 +102,7 @@ public class SQLconnect {
 
     public void requestUser(int user_id, int event_id, int requested, int join){
         try (Connection conn = DriverManager.getConnection(url, username, DBpassword)) {
-            String addEvent = "INSERT INTO request_user (user_id, event_id, requested, [join]) VALUES (?, ?, ?, ?)";
+            String addEvent = "INSERT INTO request_user (user_id, event_id, requested, 'join') VALUES (?, ?, ?, ?)";
             try (PreparedStatement pstmt = conn.prepareStatement(addEvent)) {
                 pstmt.setString(1, String.valueOf(user_id));
                 pstmt.setString(2, String.valueOf(event_id));
@@ -110,7 +120,7 @@ public class SQLconnect {
 
     public void inviteUser(int user_id, int event_id, int invited, int join){
         try (Connection conn = DriverManager.getConnection(url, username, DBpassword)) {
-            String addEvent = "INSERT INTO invited_user (user_id, event_id, invited, [join]) VALUES (?, ?, ?, ?)";
+            String addEvent = "INSERT INTO invited_user (user_id, event_id, invited, 'join') VALUES (?, ?, ?, ?)";
             try (PreparedStatement pstmt = conn.prepareStatement(addEvent)) {
                 pstmt.setString(1, String.valueOf(user_id));
                 pstmt.setString(2, String.valueOf(event_id));
@@ -204,6 +214,84 @@ public class SQLconnect {
     }
 
     
+    public void selectUserEvent(int user_id){
+        try (Connection conn = DriverManager.getConnection(url, username, DBpassword)) {
+            String selectEvent = "SELECT * FROM user_event WHERE user_id = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(selectEvent)) {
+                pstmt.setInt(1, user_id);
+                pstmt.executeUpdate();
+                System.out.println("Select Successfully");
+            }
+
+        } catch (SQLException e) {
+            System.out.print("Syntax error");
+            e.printStackTrace();
+        }
+    }
+
+
+
+    public void updateEncryptUser(int user_id, int age, int phone, String email, String password) throws Exception{
+        try (Connection conn = DriverManager.getConnection(url, username, DBpassword)) {
+
+            hash SHA2 = new hash();
+            String pass =  SHA2.SHA256pass(password);
+
+            SecretKey key = Encrytion.generateKey();
+            String new_age = Encrytion.AESEncrypt(String.valueOf(age), key);
+            String new_phone = Encrytion.AESEncrypt(String.valueOf(phone), key);
+            String new_email = Encrytion.AESEncrypt(email, key);
+
+            String encryptUser = "UPDATE user SET age = ?, phone = ?, email = ?, password = ? WHERE user_id = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(encryptUser)) {
+                pstmt.setString(1, new_age);;
+                pstmt.setString(2, new_phone);;
+                pstmt.setString(3, new_email);
+                pstmt.setString(4, pass);
+                pstmt.setString(5, String.valueOf(user_id));
+                pstmt.executeUpdate();
+                System.out.println("Encrypt User Successfully");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateEncryptEvent(int event_id, int host_id, int private_event, String description, String start_time, String end_time, String location, String link_app_event, int min_num_att, int max_num_att, int num_org) throws Exception{
+        try (Connection conn = DriverManager.getConnection(url, username, DBpassword)) {
+
+            SecretKey key = Encrytion.generateKey();
+            String new_description = Encrytion.AESEncrypt(description, key);
+            String new_start_time = Encrytion.AESEncrypt(start_time, key);
+            String new_end_time = Encrytion.AESEncrypt(end_time, key);
+            String new_location = Encrytion.AESEncrypt(location, key);
+            String new_link_app_event = Encrytion.AESEncrypt(link_app_event, key);
+            String new_min_num_att = Encrytion.AESEncrypt(String.valueOf(min_num_att), key);
+            String new_max_num_att = Encrytion.AESEncrypt(String.valueOf(max_num_att), key);
+            String new_num_org = Encrytion.AESEncrypt(String.valueOf(num_org), key);
+
+            String encryptUser = "UPDATE event SET description = ?, start_time = ?, end_time = ?, location = ?, link_app_event = ?, min_num_att = ?, max_num_att = ?, num_org = ? WHERE event_id = ? AND host_id = ? AND private_event = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(encryptUser)) {
+                pstmt.setString(1, new_description);;
+                pstmt.setString(2, new_start_time);;
+                pstmt.setString(3, new_end_time);
+                pstmt.setString(4, new_location);
+                pstmt.setString(5, new_link_app_event);
+                pstmt.setString(6, new_min_num_att);
+                pstmt.setString(7, new_max_num_att);
+                pstmt.setString(8, new_num_org);
+                pstmt.setString(9, String.valueOf(event_id));
+                pstmt.setString(10, String.valueOf(host_id));
+                pstmt.setString(11, String.valueOf(private_event));
+                pstmt.executeUpdate();
+                System.out.println("Encrypt Event Successfully");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.print("Not exists");
+        }
+    }
+
 
 
 }

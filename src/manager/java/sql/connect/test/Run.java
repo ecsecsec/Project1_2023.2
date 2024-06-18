@@ -1,6 +1,7 @@
 package manager.java.sql.connect.test;
 
 import manager.java.sql.connect.SQLconnect;
+import manager.java.encryption.Encrytion;
 
 public class Run {
     public static void main(String[] args){
@@ -11,7 +12,7 @@ public class Run {
 //        SQL.createJob("Host",1, 100);
 //        SQL.createOrg(1, 1, "Ecec", 1 );
 //        SQL.createEvent(1, 1, "Birthday",
-//               "2008-10-29 14:56:59", "Hanoi",
+//               "2008-10-29 14:56:59", "2008-10-29 14:56:59", "Hanoi",
 //               "app", 20, 50, 20);
 //        SQL.requestUser(2,1,1,0);
 //        SQL.updateEvent("location", "hcm", 1);
