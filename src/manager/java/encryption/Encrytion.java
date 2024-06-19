@@ -20,12 +20,37 @@ public class Encrytion {
         return Base64.getEncoder().encodeToString(encryptedData);
     }
 
+    public static int AESEncrypt(int x, SecretKey secretKey) throws Exception {
+        String stringKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
+        int count = 0;
+        for (int i = 0; i < stringKey.length(); i++) {
+            if (Character.isUpperCase(stringKey.charAt(i))) {
+                count++;
+            }
+        }
+        return 3 * x * x - count * x + 5;
+
+    }
+
     public static String AESDecrypt(String encryptedData, SecretKey secretKey) throws Exception {
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.DECRYPT_MODE, secretKey);
         byte[] decodedData = Base64.getDecoder().decode(encryptedData);
         byte[] decryptedData = cipher.doFinal(decodedData);
         return new String(decryptedData);
+    }
+
+    public static int AESDecrypt(int y, SecretKey secretKey) throws Exception {
+        String stringKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
+        int count = 0;
+        for (int i = 0; i < stringKey.length(); i++) {
+            if (Character.isUpperCase(stringKey.charAt(i))) {
+                count++;
+            }
+        }
+
+        int delta = count * count + 12*y - 60;
+        return (int) ((count + Math.sqrt(delta)) / 6);
     }
 
 }
