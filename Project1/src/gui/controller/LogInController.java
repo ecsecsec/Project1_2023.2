@@ -45,7 +45,7 @@ public class LogInController {
 	void btnLoginPressed(ActionEvent event) throws SQLException {
 	    LogIn login = new LogIn(nameField.getText(), passwordField.getText());
 	    this.user = login;
-	    if (login.getCount() == 1) {
+	    if (login.isCount()) {
 	        try {
 	        	
 	            final String HOME = "/gui/view/Home.fxml";
@@ -67,11 +67,12 @@ public class LogInController {
 			}catch(Exception e) {
 				e.printStackTrace();
 			}
-		}else if(login.getCount() == 2) {
-			
-		}else if(login.getCount() == 0) {
-			
-		}
+	    }else {
+	    	System.out.println("Password is wrong or User does not exits!");
+	    	nameField.clear();
+	    	passwordField.clear();
+	    	
+	    }
 	}
 
 	@FXML

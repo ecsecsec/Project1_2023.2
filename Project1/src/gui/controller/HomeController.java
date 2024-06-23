@@ -6,11 +6,14 @@ import java.sql.ResultSet;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import database.ConnectionUtil;
 import database.dbConnection;
+import encyption.Encryption;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.layout.AnchorPane;
@@ -21,22 +24,23 @@ public class HomeController {
 	private EventList eventList;
 	private Event event;
 	private User user;
+	private Connection c;
 	public HomeController(User user) {
 		super();
 		this.user = user;
+		try {
+			ConnectionUtil con = new ConnectionUtil();
+			c = con.getConnection("localhost", user.getUserName(), user.getPassword());
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
-	
-	@FXML
-    private Button btnFind;
 
     @FXML
-    private RadioButton btnIsPrivate;
+    private Button btnCreateEvent;
 
     @FXML
     private Button btnMyAccount;
-
-    @FXML
-    private RadioButton btnName;
 
     @FXML
     private Button btnNewEvent;
@@ -48,56 +52,41 @@ public class HomeController {
     private Button btngManagerEvent;
 
     @FXML
-    private TextField filter;
-
-    @FXML
     private GridPane gridPaneEvent;
 
-    @FXML
-    private DatePicker dateFilter;
-    
-    @FXML
-    void dateFilterPicked(ActionEvent event) {
-
-    }
-
-    @FXML
-    void btnFindPressed(ActionEvent event) {
-
-    }
-
-    @FXML
-    void btnIsPrivateChoosed(ActionEvent event) {
-
-    }
-    
-    @FXML
-    void btnNameChoosed(ActionEvent event) {
-
-    }
-    
+  	//Thiếu tạo event mới
     @FXML
     void btnManagerEventClicked(ActionEvent evt) {
+    	
     	gridPaneEvent.getChildren().clear();
+    	//Change btn color
+    	btnNewEvent.setStyle("-fx-background-color: #393E46;");
+    	btnUserEvent.setStyle("-fx-background-color: #393E46;");
+    	btngManagerEvent.setStyle("-fx-background-color: #00ADB5;");
+    	btnMyAccount.setStyle("-fx-background-color: #393E46;");
+    	btnCreateEvent.setStyle("-fx-background-color: #393E46;");
+    	
         this.eventList = new EventList();
     	//Khởi tạo list ManagerEvent của user
         try {
-            dbConnection con = new dbConnection();
-            Connection c = con.getConnection();
-            String sql = "SELECT * FROM event JOIN user ON event.host_id = user.user_id WHERE user.user_id = ?";
+            String sql = "SELECT event.* FROM event JOIN user ON event.host_id = user.user_id WHERE user.user_id = ?";
             //đúng
-            PreparedStatement st = c.prepareStatement(sql);
-            st.setInt(1, this.user.getUserID());
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                Event event = new Event();
-                event.setEventID(rs.getInt(1));
-                event.setEventName(rs.getString(12));
-                event.setLocation(rs.getString(7));
-                event.setDescription(rs.getString(4));
-                event.setPrivate(rs.getBoolean(3));
-                this.eventList.addEvent(event);
-            }
+            try(PreparedStatement st = c.prepareStatement(sql)){
+            	st.setInt(1, this.user.getUserID());
+                ResultSet rs = st.executeQuery();
+                while (rs.next()) {
+                    Event event = new Event();
+                    event.setEventID(rs.getInt(1));
+                    event.setHostID(rs.getInt(2));
+                    event.setStartTime(rs.getTimestamp(5));
+                    event.setEndTime(rs.getTimestamp(6));
+                    event.setEventName(Encryption.AESDecrypt(rs.getString(12), Encryption.generateKey()));
+                    event.setLocation(Encryption.AESDecrypt(rs.getString(7), Encryption.generateKey()));
+                    event.setDescription(Encryption.AESDecrypt(rs.getString(4), Encryption.generateKey()));
+                    event.setPrivate(rs.getBoolean(3));
+                    this.eventList.addEvent(event);
+                }
+            }            
         } catch (Exception ex) {
             System.out.println("Connect failure!");
             ex.printStackTrace();
@@ -115,14 +104,16 @@ public class HomeController {
                 fxmlLoader.setController(managerController);
 
                 AnchorPane anchorPane = fxmlLoader.load();
+                System.out.println(this.eventList.getItems().get(i));
                 managerController.setData(this.eventList.getItems().get(i));
-
+                
                 if (col == 1) {
                     col = 0;
                     row++;
                 }
                 gridPaneEvent.add(anchorPane, col++, row);
                 GridPane.setMargin(anchorPane, new Insets(20, 0, 0, 0));
+                
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -132,11 +123,16 @@ public class HomeController {
     @FXML
     void btnUserEventClicked(ActionEvent evt) {
     	gridPaneEvent.getChildren().clear();
+    	//Change btn color
+    	btnNewEvent.setStyle("-fx-background-color: #393E46;");
+    	btnUserEvent.setStyle("-fx-background-color: #00ADB5;");
+    	btngManagerEvent.setStyle("-fx-background-color: #393E46;");
+    	btnMyAccount.setStyle("-fx-background-color: #393E46;");
+    	btnCreateEvent.setStyle("-fx-background-color: #393E46;");
+    	
         this.eventList = new EventList();
         //Khởi tạo list UserEvent của user
         try {
-            dbConnection con = new dbConnection();
-            Connection c = con.getConnection();
             String sql = "SELECT * FROM event JOIN user_event ON event.event_id = user_event.event_id WHERE user_event.user_id = ?";
         	//đúng
             PreparedStatement st = c.prepareStatement(sql);
@@ -145,9 +141,12 @@ public class HomeController {
             while (rs.next()) {
                 Event event = new Event();
                 event.setEventID(rs.getInt(1));
-                event.setEventName(rs.getString(12));
-                event.setLocation(rs.getString(7));
-                event.setDescription(rs.getString(4));
+                event.setHostID(rs.getInt(2));
+                event.setStartTime(rs.getTimestamp(5));
+                event.setEndTime(rs.getTimestamp(6));
+                event.setEventName(Encryption.AESDecrypt(rs.getString(12), Encryption.generateKey()));
+                event.setLocation(Encryption.AESDecrypt(rs.getString(7), Encryption.generateKey()));
+                event.setDescription(Encryption.AESDecrypt(rs.getString(4), Encryption.generateKey()));
                 event.setPrivate(rs.getBoolean(3));
                 this.eventList.addEvent(event);
             }
@@ -165,11 +164,11 @@ public class HomeController {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader();
                 fxmlLoader.setLocation(getClass().getResource(ITEM_FXML));
-                InvitedItemController invitedController = new InvitedItemController(user);
-                fxmlLoader.setController(invitedController);
+                UserItemController userController = new UserItemController(user);
+                fxmlLoader.setController(userController);
 
                 AnchorPane anchorPane = fxmlLoader.load();
-                invitedController.setData(this.eventList.getItems().get(i));
+                userController.setData(this.eventList.getItems().get(i));
 
                 if (col == 1) {
                     col = 0;
@@ -187,6 +186,13 @@ public class HomeController {
     @FXML
     void imgMyAccountClicked(ActionEvent evt) {
     	gridPaneEvent.getChildren().clear();
+    	//Change btn color
+    	btnNewEvent.setStyle("-fx-background-color: #393E46;");
+    	btnUserEvent.setStyle("-fx-background-color: #393E46;");
+    	btngManagerEvent.setStyle("-fx-background-color: #393E46;");
+    	btnMyAccount.setStyle("-fx-background-color: #00ADB5;");
+    	btnCreateEvent.setStyle("-fx-background-color: #393E46;");
+    	
     	final String ACC_FXML = "/gui/view/Account.fxml";
     	int col =1;
     	int row = 1;
@@ -210,11 +216,15 @@ public class HomeController {
     @FXML
     void imgNewEventClicked(ActionEvent evt) {
     	gridPaneEvent.getChildren().clear();
+    	//Change btn color
+    	btnNewEvent.setStyle("-fx-background-color: #00ADB5;");
+    	btnUserEvent.setStyle("-fx-background-color: #393E46;");
+    	btngManagerEvent.setStyle("-fx-background-color: #393E46;");
+    	btnMyAccount.setStyle("-fx-background-color: #393E46;");
+    	btnCreateEvent.setStyle("-fx-background-color: #393E46;");
     	//Khởi tạo list NewEvent của user
     	this.eventList = new EventList();
     	try {
-        	dbConnection con = new dbConnection();
-        	Connection c = con.getConnection();
             String sql = "SELECT * FROM event e WHERE (e.private_event = 0 AND e.event_id NOT IN (SELECT event_id FROM user_event WHERE user_id = ?)) OR (e.private_event = 1 AND e.event_id IN (SELECT event_id FROM invited_user WHERE user_id = ?))";
             //chưa fix
         	PreparedStatement st = c.prepareStatement(sql);
@@ -224,10 +234,13 @@ public class HomeController {
             while (rs.next()) {
                 Event event = new Event();
                 event.setEventID(rs.getInt(1));
-                event.setEventName(rs.getString(12));
-	        	event.setLocation(rs.getString(7));
-	        	event.setDescription(rs.getString(4));
-	        	event.setPrivate(rs.getBoolean(3));
+                event.setHostID(rs.getInt(2));
+                event.setStartTime(rs.getTimestamp(5));
+                event.setEndTime(rs.getTimestamp(6));
+                event.setEventName(Encryption.AESDecrypt(rs.getString(12), Encryption.generateKey()));
+                event.setLocation(Encryption.AESDecrypt(rs.getString(7), Encryption.generateKey()));
+                event.setDescription(Encryption.AESDecrypt(rs.getString(4), Encryption.generateKey()));
+                event.setPrivate(rs.getBoolean(3));
                 this.eventList.addEvent(event);       
             }
  
@@ -262,5 +275,35 @@ public class HomeController {
     		}
     	}
     }
+    
+    @FXML
+    void btnCreateEventClicked(ActionEvent event) {
+    	gridPaneEvent.getChildren().clear();
+    	//Change btn color
+    	btnNewEvent.setStyle("-fx-background-color: #393E46;");
+    	btnUserEvent.setStyle("-fx-background-color: #393E46;");
+    	btngManagerEvent.setStyle("-fx-background-color: #393E46;");
+    	btnMyAccount.setStyle("-fx-background-color: #393E46;");
+    	btnCreateEvent.setStyle("-fx-background-color: #00ADB5;");
+    	
+    	final String CREATE_FXML = "/gui/view/CreateEvent.fxml";
+    	int col =1;
+    	int row = 1;
+    	try {
+    		FXMLLoader fxmlLoader = new FXMLLoader();
+			fxmlLoader.setLocation(getClass().getResource(CREATE_FXML));
+			CreateController create = new CreateController(this.user);
+			fxmlLoader.setController(create);
+			
+			AnchorPane anchorPane = new AnchorPane();
+			anchorPane = fxmlLoader.load();
+			
+			gridPaneEvent.add(anchorPane, col, row);
+			GridPane.setMargin(anchorPane, null);
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    	}
+    }
+
 }
 

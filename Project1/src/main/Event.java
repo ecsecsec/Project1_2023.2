@@ -1,4 +1,5 @@
 package main;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -6,14 +7,14 @@ public class Event {
 
 	private int eventID;
 	private String eventName;
-	private String startTime;
-	private String endTime;
+	private Timestamp startTime;
+	private Timestamp endTime;
 	private String description;
 	private String location;
 	private boolean isPrivate;
 	private int hostID;
 	
-	public Event(String eventName, String startTime, String endTime, String description, String location,
+	public Event(String eventName, Timestamp startTime, Timestamp endTime, String description, String location,
 			boolean isPrivate, int hostID) {
 		super();
 		this.eventName = eventName;
@@ -43,16 +44,16 @@ public class Event {
 	public void setEventName(String eventName) {
 		this.eventName = eventName;
 	}
-	public String getStartTime() {
+	public Timestamp getStartTime() {
 		return startTime;
 	}
-	public void setStartTime(String startTime) {
+	public void setStartTime(Timestamp startTime) {
 		this.startTime = startTime;
 	}
-	public String getEndTime() {
+	public Timestamp getEndTime() {
 		return endTime;
 	}
-	public void setEndTime(String endTime) {
+	public void setEndTime(Timestamp endTime) {
 		this.endTime = endTime;
 	}
 	public String getDescription() {

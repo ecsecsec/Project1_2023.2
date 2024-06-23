@@ -7,16 +7,48 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.crypto.SecretKey;
+
+import encyption.Encryption;
+import encyption.hash;
+
 public class dbConnection {
-	private static String DB_URL = "jdbc:mysql://localhost:3306/eventmanagementapp";
+	private static String decryptedPass;
+	private static String svName = "localhost";
     private static String USER_NAME = "root";
-    private static String PASSWORD = "1nhamrnhis2";
-    
-    public static Connection getConnection() {
+    private static String PASSWORD = "/JjvMNHHTlVY5JOxnMn2bA==";
+    private static String DB_URL = "jdbc:mysql://"+svName +":3306/eventmanagementapp";
+    private static dbConnection instance;
+    private Connection con;
+    private dbConnection() {
+    	try {
+			SecretKey secretKey = Encryption.generateKey();
+            this.decryptedPass = Encryption.AESDecrypt(PASSWORD, secretKey);
+
+    		connectToDB();
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    		throw new RuntimeException("Failed to connect to db!");
+    	}
+    }
+    public void connectToDB() throws SQLException {
+		if(con == null) {
+			try {
+
+				Class.forName("com.mysql.jdbc.Driver");
+	            con = DriverManager.getConnection(DB_URL, USER_NAME, decryptedPass);
+	            System.out.println("connect successfully!");
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	public static Connection getConnection() {
         Connection conn = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection(DB_URL, USER_NAME, PASSWORD);
+            conn = DriverManager.getConnection(DB_URL, USER_NAME, decryptedPass);
             System.out.println("connect successfully!");
         } catch (Exception ex) {
             System.out.println("connect failure!");
@@ -24,37 +56,51 @@ public class dbConnection {
         }
         return conn;
     }
-    public void requestUser(int user_id, int event_id){
-        try (Connection conn = DriverManager.getConnection(DB_URL, USER_NAME, PASSWORD)) {
-            String addEvent = "INSERT INTO request_user (user_id, event_id, requested, `join`) VALUES (?, ?, ?, ?)";
-            try (PreparedStatement pstmt = conn.prepareStatement(addEvent)) {
-                pstmt.setString(1, String.valueOf(user_id));
-                pstmt.setString(2, String.valueOf(event_id));
-                pstmt.setInt(3, 1);
-                pstmt.setInt(4, 0);
-                pstmt.executeUpdate();
-                System.out.println("Request Successfully");
-            }
-        } catch (SQLException e) {
-            System.out.print("Syntax error");
-            e.printStackTrace();
-        }
-    }
-    public void updateJoinUser(String table, int user_id, int event_id ){
-        try (Connection conn = DriverManager.getConnection(DB_URL, USER_NAME, PASSWORD)) {
-            String addEvent = "UPDATE ? SET `join` = 1 WHERE user_id = ? AND event_id = ?";
-            try (PreparedStatement pstmt = conn.prepareStatement(addEvent)) {
-                pstmt.setString(1, table);
-                pstmt.setString(2, String.valueOf(user_id));
-                pstmt.setString(3,String.valueOf(event_id));
-                pstmt.executeUpdate();
-                System.out.println("Join Successfully");
-            }
-
-
-        } catch (SQLException e) {
-            System.out.print("Syntax error");
-            e.printStackTrace();
-        }
-    }
+	
+	public static dbConnection getInstance() {
+		if(instance == null) {
+			synchronized(dbConnection.class) {
+				if(instance == null) {
+					instance = new dbConnection();
+				}
+			}
+		}
+		return instance;
+	}
+	public void register(String userName, String password) {
+		try {
+			//String name =  Encryption.AESEncrypt(userName, Encryption.generateKey());
+			String pass =  hash.SHA256pass(password);
+			dbConnection db = new dbConnection();
+			Connection con = db.getConnection();
+			SecretKey secretKey = Encryption.generateKey();
+			String createUser = "CREATE USER ?@'%' IDENTIFIED BY ?";		
+			try (PreparedStatement st = con.prepareStatement(createUser)){
+				st.setString(1, userName);
+				st.setString(2,  pass);
+				st.executeUpdate();
+				
+			}catch(SQLException e) {
+				System.out.println("User had existed!");
+				e.printStackTrace();
+			}
+			String grantPrivileges = "GRANT SELECT, INSERT, UPDATE, DELETE ON eventmanagementapp.* TO ?@'%'";
+			try (PreparedStatement st = con.prepareStatement(grantPrivileges)){
+				st.setString(1, userName);
+				st.executeUpdate();
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+			String flush = "FLUSH PRIVILEGES";
+			try (PreparedStatement st = con.prepareStatement(flush)){
+				st.executeUpdate();
+				System.out.println("Created user successfully!");
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

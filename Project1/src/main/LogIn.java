@@ -1,60 +1,55 @@
 package main;
 
-import database.dbConnection;
+import database.*;
+import encyption.Encryption;
+import javafx.scene.control.CheckBox;
+
 import java.sql.*;
 
 public class LogIn extends User {
-	private int count;
+	private boolean count;
 	public LogIn(String userName, String password) {
 		super(userName, password);
-		this.count = 0;
+		this.count = false;
 		try {
-			dbConnection con = new dbConnection();
-			Connection c = con.getConnection();
-            String sql1 = "SELECT COUNT(*) FROM `user` WHERE name = ?";
-            PreparedStatement st = c.prepareStatement(sql1);
-            st.setString(1, this.getUserName());
+			ConnectionUtil con = new ConnectionUtil();
+			Connection c = con.getConnection("localhost", userName, password);
+            String sql = "SELECT * FROM user WHERE name = ?";
+            PreparedStatement st = c.prepareStatement(sql);
+            st.setString(1, Encryption.AESEncrypt(this.getUserName(), Encryption.generateKey()));
             ResultSet rs = st.executeQuery();
-            rs.next();
-            //count = 0 -> dont exist, count == 1 -> exist, count = 2 -> exist but wrong pass
-            if(rs.getInt(1) == 1) {
-            	String sq2 = "SELECT COUNT(*) FROM `user` WHERE name = ? AND password = ?";
-                PreparedStatement st2 = c.prepareStatement(sq2);
-                st2.setString(1, this.getUserName());
-                st2.setString(2, this.getPassword());
-                ResultSet rs2 = st2.executeQuery();
-                rs2.next();
-                if(rs2.getInt(1) == 1) {
-                	this.count = 1;
-                	String sql3 = "SELECT * FROM `user` WHERE name = ? AND password = ?";
-                    PreparedStatement st3 = c.prepareStatement(sql3);
-                    st3.setString(1, this.getUserName());
-                    st3.setString(2, this.getPassword());
-                    ResultSet rs3 = st3.executeQuery();
-                    rs3.next();
-                    //Tạo user
-
-                    this.setUserID(rs3.getInt(1));
-                    this.setUserName(rs3.getString(2));
-                    this.setUserAge(rs3.getInt(3));
-                    this.setUserPhone(rs3.getInt(4));
-                    this.setUserEmail(rs3.getString(5));
-                    this.setPassword(rs3.getString(6));
-                }else {
-                	this.count = 2;
-                }
-            }
-
+            if(rs.next()) {
+            	System.out.println("Log in successfully!");
+            	this.count = true;
+                //Tạo user với thông tin giải mã
+                this.setUserID(rs.getInt(1));
+                this.setUserName(Encryption.AESDecrypt(rs.getString(2), Encryption.generateKey()));
+                this.setUserAge(Encryption.AESDecrypt(rs.getInt(3), Encryption.generateKey()));
+                this.setUserPhone(Encryption.AESDecrypt(rs.getInt(4), Encryption.generateKey()));
+                this.setUserEmail(Encryption.AESDecrypt(rs.getString(5), Encryption.generateKey()));
+                this.setPassword(Encryption.AESDecrypt(rs.getString(6), Encryption.generateKey()));
+            }            
+            rs.close();
+            st.close();
+            c.close();
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 
 	}
-	public int getCount() {
+	
+	public boolean isCount() {
 		return count;
 	}
-	public void setCount(int count) {
+	public void setCount(boolean count) {
 		this.count = count;
 	}
-	
+
+	public LogIn(int userID, String userName, int userAge, int userPhone, String userEmail, CheckBox checkbox) {
+		super(userID, userName, userAge, userPhone, userEmail, checkbox);
+	}
+
+	public LogIn(String userName, int userPhone, String userEmail, CheckBox checkbox) {
+		super(userName, userPhone, userEmail, checkbox);
+	}
 }

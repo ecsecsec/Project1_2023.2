@@ -59,7 +59,7 @@ public class SignUpController {
     void btnSignUpPressed(ActionEvent event) {
     	if(password.getText().equals(confirmPassword.getText())) {
     		SignUp signup = new SignUp(userName.getText(), email.getText(), password.getText());
-    		if(signup.getCount() == 1) {
+    		if(signup.isCount()) {
     			System.out.println("Created account. Please login to use!");
     			try {
     	    		final String LOGIN = "/gui/view/LogIn.fxml";
@@ -81,10 +81,10 @@ public class SignUpController {
     	    		e.printStackTrace();
     	    	}
     		}else {
-    			System.out.println("Password is incorrect. Please try again!");
+    			System.out.println("Cannot create user. Please try again!");
     		}
     	}else {
-    		
+    		System.out.println("Password is incorrect. Please try again!");
     	}
     }
 }
