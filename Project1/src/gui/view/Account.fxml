@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane style="-fx-background-image: #393E46;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox prefHeight="500.0" prefWidth="800.0" style="-fx-background-color: #393E46;">
+         <children>
+            <ImageView fx:id="imgAvt" fitHeight="200.0" fitWidth="200.0" onMouseClicked="#imgAvatarChange" pickOnBounds="true" preserveRatio="true">
+               <HBox.margin>
+                  <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+               </HBox.margin>
+               <image>
+                  <Image url="@../../main/icon/eventManagerhuman.png" />
+               </image>
+            </ImageView>
+            <VBox prefHeight="502.0" prefWidth="550.0">
+               <children>
+                  <Label text="User Name:" textFill="WHITE">
+                     <VBox.margin>
+                        <Insets left="50.0" right="50.0" top="50.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font name="System Italic" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblUserName" text="UserName" textFill="WHITE">
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="50.0" right="50.0" top="5.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Label>
+                  <Label text="Email:" textFill="WHITE">
+                     <font>
+                        <Font name="System Italic" size="12.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="50.0" right="50.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblEmail" text="Email" textFill="WHITE">
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="50.0" right="20.0" top="5.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Label>
+                  <Label text="Age:" textFill="WHITE">
+                     <font>
+                        <Font name="System Italic" size="12.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="50.0" right="50.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblAge" text="Age" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="50.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label text="PhoneNumber:" textFill="WHITE">
+                     <font>
+                        <Font name="System Italic" size="12.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="50.0" right="50.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblPhoneNumber" text="PhoneNumber" textFill="WHITE">
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="50.0" right="20.0" top="5.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="btnEdit" mnemonicParsing="false" onAction="#btnEditPressed" prefHeight="50.0" prefWidth="100.0" text="Edit">
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="400.0" right="10.0" top="10.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Group>
+                     <children>
+                        <VBox fx:id="editVbox" prefHeight="250.0" prefWidth="500.0">
+                           <children>
+                              <Label prefWidth="500.0" text="Email:" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="emailField" prefWidth="500.0" />
+                              <Label prefWidth="500.0" text="PhoneNumber:" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="phoneField" prefWidth="500.0" />
+                              <Label text="Age:" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="ageField" />
+                              <Button fx:id="btnSUbmit" alignment="CENTER" mnemonicParsing="false" onAction="#btnSubmitPressed" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: #00ADB5;" text="Submit" textFill="WHITE">
+                                 <VBox.margin>
+                                    <Insets left="400.0" top="10.0" />
+                                 </VBox.margin>
+                                 <font>
+                                    <Font name="System Italic" size="12.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </VBox>
+                     </children>
+                  </Group>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
