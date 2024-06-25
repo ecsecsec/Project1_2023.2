@@ -85,6 +85,8 @@ public class CreateController {
     			nameField.clear();
     			descriptionField.clear();
     			checkboxIsPrivate.setSelected(false);
+    			st.close();
+    			c.close();
         	}catch(Exception e) {
         		e.printStackTrace();
         	}

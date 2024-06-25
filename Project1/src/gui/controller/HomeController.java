@@ -85,7 +85,8 @@ public class HomeController {
                     event.setDescription(Encryption.AESDecrypt(rs.getString(4), Encryption.generateKey()));
                     event.setPrivate(rs.getBoolean(3));
                     this.eventList.addEvent(event);
-                }
+                }st.close();
+                rs.close();
             }            
         } catch (Exception ex) {
             System.out.println("Connect failure!");
@@ -149,7 +150,8 @@ public class HomeController {
                 event.setDescription(Encryption.AESDecrypt(rs.getString(4), Encryption.generateKey()));
                 event.setPrivate(rs.getBoolean(3));
                 this.eventList.addEvent(event);
-            }
+            }st.close();
+            rs.close();
 
         } catch (Exception ex) {
             System.out.println("Connect failure!");
@@ -242,7 +244,8 @@ public class HomeController {
                 event.setDescription(Encryption.AESDecrypt(rs.getString(4), Encryption.generateKey()));
                 event.setPrivate(rs.getBoolean(3));
                 this.eventList.addEvent(event);       
-            }
+            }st.close();
+            rs.close();
  
         } catch (Exception ex) {
             System.out.println("Connect failure!");

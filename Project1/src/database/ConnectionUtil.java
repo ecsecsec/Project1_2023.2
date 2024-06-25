@@ -21,6 +21,7 @@ public class ConnectionUtil {
             Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(DB_URL, userName, hash.SHA256pass(password));
             System.out.println("connect successfully!");
+            conn.close();
         } catch (Exception ex) {
             System.out.println("connect failure!");
             ex.printStackTrace();
@@ -55,8 +56,10 @@ public class ConnectionUtil {
                     	st.setInt(2, event.getEventID());
                     	st.executeUpdate();
                     	System.out.println("Join Successfully");
+                    	st.close();
                     }
-            	}
+            	}pstmt.close();
+            	con.close();
             }
         } catch (SQLException e) {
             System.out.print("Syntax error");
@@ -76,6 +79,7 @@ public class ConnectionUtil {
 				}else {
 					System.out.println("Cannot find user "+userName+"!");
 				}
+				st.close();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -101,9 +105,9 @@ public class ConnectionUtil {
 				}else {
 					System.out.println("Invite Successfully");
 	                System.out.println(userName + " has been invited to "+ event_id+"!");
-				}
+				}st.close();
 				
-			}
+			}con.close();
         } catch (SQLException e) {
             System.out.print("Syntax error");
             e.printStackTrace();
@@ -117,6 +121,7 @@ public class ConnectionUtil {
                 pstmt.setInt(1, user.getUserID());
                 pstmt.setInt(2, event_id);
                 pstmt.executeUpdate();
+                pstmt.close();
             }
             if(!isSelect) {
             	String sql = "INSERT INTO user_event(user_id, event_id) VALUES(?,?)";
@@ -125,9 +130,10 @@ public class ConnectionUtil {
                 	st.setInt(2, event_id);
                 	st.executeUpdate();
                 	System.out.println("Join Successfully");
+                	st.close();
                 }
                 
-            }
+            }con.close();
         } catch (SQLException e) {
             System.out.print("Syntax error");
             e.printStackTrace();
@@ -149,6 +155,7 @@ public class ConnectionUtil {
 				}else if(rs.getInt(1) == 0) {
 					addEvent ="UPDATE invited_user SET `join` = 0 WHERE user_id = ? AND event_id = ?";
 				}
+				st.close();
         	}
 
             
@@ -157,6 +164,7 @@ public class ConnectionUtil {
                 pstmt.setString(2,String.valueOf(event_id));
                 pstmt.executeUpdate();
                 System.out.println("Unjoin Successfully");
+                pstmt.close();
             }
 
             String deleteListEvent = "DELETE FROM user_event WHERE user_id = ? AND event_id = ?";
@@ -165,9 +173,11 @@ public class ConnectionUtil {
                 pstmt.setString(2,String.valueOf(event_id));
                 pstmt.executeUpdate();
                 System.out.println("Delete Successfully");
+                pstmt.close();
             } catch (SQLException ignored){
                 System.out.print("Nothing here to delete");
             }
+            con.close();
 
         } catch (SQLException e) {
             System.out.print("Syntax error");

@@ -79,6 +79,7 @@ public class dbConnection {
 				st.setString(1, userName);
 				st.setString(2,  pass);
 				st.executeUpdate();
+				st.close();
 				
 			}catch(SQLException e) {
 				System.out.println("User had existed!");
@@ -88,6 +89,7 @@ public class dbConnection {
 			try (PreparedStatement st = con.prepareStatement(grantPrivileges)){
 				st.setString(1, userName);
 				st.executeUpdate();
+				st.close();
 			}catch(SQLException e) {
 				e.printStackTrace();
 			}
@@ -95,9 +97,10 @@ public class dbConnection {
 			try (PreparedStatement st = con.prepareStatement(flush)){
 				st.executeUpdate();
 				System.out.println("Created user successfully!");
+				st.close();
 			}catch(SQLException e) {
 				e.printStackTrace();
-			}
+			}con.close();
 			
 		}catch(Exception e) {
 			e.printStackTrace();

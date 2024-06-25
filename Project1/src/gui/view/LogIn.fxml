@@ -69,11 +69,6 @@
                   <Insets bottom="20.0" />
                </VBox.margin>
             </HBox>
-            <Button fx:id="btnForgotpassword" mnemonicParsing="false" onAction="#btnForgotpasswordPressed" prefHeight="50.0" prefWidth="200.0" text="Forgot Password">
-               <VBox.margin>
-                  <Insets bottom="40.0" top="10.0" />
-               </VBox.margin>
-            </Button>
          </children>
       </VBox>
    </center>

@@ -77,6 +77,7 @@ public class InfoController {
 	    			st.setInt(2, this.event.getEventID());
 	    			st.executeUpdate();
 	    			System.out.println("Update successfully!");
+	    			st.close();
 	    		}
 	    	}if(!LocationField.getText().isEmpty()) {
 	    		String sql = "UPDATE event SET location =? WHERE event_id = ?";
@@ -85,6 +86,7 @@ public class InfoController {
 	    			st.setInt(2, this.event.getEventID());
 	    			st.executeUpdate();
 	    			System.out.println("Update successfully!");
+	    			st.close();
 	    		}
 	    	}if(!descriptionField.getText().isEmpty()) {
 	    		String sql = "UPDATE event SET description =? WHERE event_id = ?";
@@ -93,8 +95,9 @@ public class InfoController {
 	    			st.setInt(2, this.event.getEventID());
 	    			st.executeUpdate();
 	    			System.out.println("Update successfully!");
+	    			st.close();
 	    		}
-	    	}
+	    	}c.close();
 		}catch(Exception e) {
 			e.printStackTrace();
 		}

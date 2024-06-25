@@ -62,11 +62,13 @@ public class ManagerItemController extends User {
 		    			if(rs1.getInt(1) > 0) {
 		    				ch.setSelected(true);			
 		    				//ai đã tham gia -> checkbox is selected
-		    			}
+		    			}st1.close();
+		    			rs1.close();
 		            }
 				    listUser.add(log);
-				}
-			}
+				}st.close();
+				rs.close();
+			}c.close();
 			//chỉ nhận user từ bảng request, bảng invited khi nhận event thì mới chuyển qua bảng request
 			/*String sql2 = "SELECT * FROM user JOIN invited_user ON user.user_id = invited_user.user_id WHERE invited_user.event_id =?";
 			try (PreparedStatement st = c.prepareStatement(sql2)){

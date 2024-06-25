@@ -37,11 +37,6 @@ public class LogInController {
     private PasswordField passwordField;
 
 	@FXML
-	void btnForgotpasswordPressed(ActionEvent event) {
-		
-	}
-	
-	@FXML
 	void btnLoginPressed(ActionEvent event) throws SQLException {
 	    LogIn login = new LogIn(nameField.getText(), passwordField.getText());
 	    this.user = login;

@@ -82,6 +82,7 @@ public class AccountController {
 	    			st.executeUpdate();
 	    			System.out.println("Update successfully!");
 	    			emailField.clear();
+	    			st.close();
 	    		}
 	    	}if(!phoneField.getText().isEmpty()) {
 	    		String sql = "UPDATE user SET phone =? WHERE user_id = ?";
@@ -91,6 +92,7 @@ public class AccountController {
 	    			st.executeUpdate();
 	    			System.out.println("Update successfully!");
 	    			phoneField.clear();
+	    			st.close();
 	    		}
 	    	}if(!ageField.getText().isEmpty()) {
 	    		String sql = "UPDATE user SET age =? WHERE user_id = ?";
@@ -100,6 +102,7 @@ public class AccountController {
 	    			st.executeUpdate();
 	    			System.out.println("Update successfully!");
 	    			ageField.clear();
+	    			st.close();
 	    		}
 	    	}
     	}catch(Exception e) {
