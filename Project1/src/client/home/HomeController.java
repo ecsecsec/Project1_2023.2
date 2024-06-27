@@ -1,8 +1,14 @@
-package gui.controller;
+package client.home;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+
+import client.account.AccountController;
+import client.create.CreateController;
+import client.dashboard.EventItemController;
+import client.manager.ManagerItemController;
+import client.user.UserItemController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -30,7 +36,7 @@ public class HomeController {
 		this.user = user;
 		try {
 			ConnectionUtil con = new ConnectionUtil();
-			c = con.getConnection("localhost", user.getUserName(), user.getPassword());
+			c = con.getConnection(  user.getUserName(), user.getPassword());
 		}catch(Exception e) {
 			e.printStackTrace();
 		}

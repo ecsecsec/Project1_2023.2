@@ -1,8 +1,9 @@
-package main;
+package client.login;
 
 import database.*;
 import encyption.Encryption;
 import javafx.scene.control.CheckBox;
+import main.User;
 
 import java.sql.*;
 
@@ -13,7 +14,7 @@ public class LogIn extends User {
 		this.count = false;
 		try {
 			ConnectionUtil con = new ConnectionUtil();
-			Connection c = con.getConnection("localhost", userName, password);
+			Connection c = con.getConnection(userName, password);
             String sql = "SELECT * FROM user WHERE name = ?";
             PreparedStatement st = c.prepareStatement(sql);
             st.setString(1, Encryption.AESEncrypt(this.getUserName(), Encryption.generateKey()));

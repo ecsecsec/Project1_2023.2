@@ -1,6 +1,9 @@
-package gui.controller;
+package client.login;
 
 import java.sql.SQLException;
+
+import client.home.HomeController;
+import client.register.SignUpController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

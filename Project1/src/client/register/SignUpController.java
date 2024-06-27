@@ -1,4 +1,5 @@
-package gui.controller;
+package client.register;
+import client.login.LogInController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

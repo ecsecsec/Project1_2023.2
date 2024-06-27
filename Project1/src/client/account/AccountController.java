@@ -1,4 +1,4 @@
-package gui.controller;
+package client.account;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
@@ -73,7 +73,7 @@ public class AccountController {
     void btnSubmitPressed(ActionEvent evt) {
     	try {
     		ConnectionUtil con = new ConnectionUtil();
-			Connection c = con.getConnection("localhost", user.getUserName(), user.getPassword());
+			Connection c = con.getConnection(  user.getUserName(), user.getPassword());
 			if(!emailField.getText().isEmpty()) {
 	    		String sql = "UPDATE user SET email =? WHERE user_id = ?";
 	    		try(PreparedStatement st = c.prepareStatement(sql)){

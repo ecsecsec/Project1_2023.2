@@ -1,4 +1,4 @@
-package gui.controller;
+package client.manager;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 
+import client.login.LogIn;
 import database.ConnectionUtil;
 import encyption.Encryption;
 import javafx.beans.value.ChangeListener;
@@ -41,7 +42,7 @@ public class ManagerItemController extends User {
 		lblEventName.setText(event.getEventName());	
 		try {
 			ConnectionUtil con = new ConnectionUtil();
-			Connection c = con.getConnection("localhost", user.getUserName(), user.getPassword());
+			Connection c = con.getConnection(user.getUserName(), user.getPassword());
 			String sql1 = "SELECT * FROM user JOIN request_user ON user.user_id = request_user.user_id WHERE request_user.event_id =?";
 			try (PreparedStatement st = c.prepareStatement(sql1)){
 				st.setInt(1, this.event.getEventID());

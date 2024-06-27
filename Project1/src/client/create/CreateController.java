@@ -1,4 +1,4 @@
-package gui.controller;
+package client.create;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
@@ -69,7 +69,7 @@ public class CreateController {
     	if(!LocationField.getText().isEmpty() && !nameField.getText().isEmpty() && !descriptionField.getText().isEmpty()) {
     		try {
         		ConnectionUtil con = new ConnectionUtil();
-    			Connection c = con.getConnection("localhost", user.getUserName(), user.getPassword());
+    			Connection c = con.getConnection(  user.getUserName(), user.getPassword());
     			String sql = "INSERT INTO event(host_id, private_event, description, start_time, end_time, location, event_Name) VALUES(?, ?, ?, ?, ?, ?, ?) ";
     			PreparedStatement st = c.prepareStatement(sql);
     			st.setInt(1, this.user.getUserID());

@@ -1,4 +1,4 @@
-package gui.controller;
+package client.dashboard;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,7 +29,7 @@ public class EventItemController {
 
 	    	try {
 	    		ConnectionUtil con = new ConnectionUtil();
-				Connection c = con.getConnection("localhost", user.getUserName(), user.getPassword());
+				Connection c = con.getConnection(  user.getUserName(), user.getPassword());
 				
 				String sql = "SELECT COUNT(*) FROM request_user WHERE user_id = ? AND event_id = ?";
 				try(PreparedStatement st = c.prepareStatement(sql)){
@@ -102,7 +102,7 @@ public class EventItemController {
     void btnAcceptPressed(ActionEvent evt) {
     	try {
     		ConnectionUtil con = new ConnectionUtil();
-            Connection c = con.getConnection("localhost", user.getUserName(), user.getPassword());
+            Connection c = con.getConnection(  user.getUserName(), user.getPassword());
             con.updateJoinUser("invited_user", this.user, this.user, this.event.getEventID(), this.event.isPrivate());
             if(this.event.isPrivate()) {
             	con.requestUser(user, event);
@@ -129,7 +129,7 @@ public class EventItemController {
     	//đã fix
         try {
             ConnectionUtil con = new ConnectionUtil();
-            Connection c = con.getConnection("localhost", user.getUserName(), user.getPassword());
+            Connection c = con.getConnection(  user.getUserName(), user.getPassword());
             String sql = "SELECT COUNT(*) FROM request_user WHERE user_id = ? AND event_id = ?";
 			PreparedStatement st = c.prepareStatement(sql);
 			st.setInt(1, this.user.getUserID());

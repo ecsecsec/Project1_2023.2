@@ -6,9 +6,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import client.home.HomeController;
+import client.login.LogInController;
 import database.dbConnection;
-import gui.controller.HomeController;
-import gui.controller.LogInController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;

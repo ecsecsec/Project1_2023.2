@@ -1,4 +1,4 @@
-package gui.controller;
+package client.user;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

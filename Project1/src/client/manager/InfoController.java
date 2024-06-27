@@ -1,10 +1,11 @@
-package gui.controller;
+package client.manager;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 
+import client.login.LogIn;
 import database.ConnectionUtil;
 import encyption.Encryption;
 import javafx.event.ActionEvent;
@@ -15,7 +16,6 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import main.Event;
-import main.LogIn;
 import main.User;
 
 public class InfoController {
@@ -69,7 +69,7 @@ public class InfoController {
     void btnSavePressed(ActionEvent event) {
     	try {
 			ConnectionUtil con = new ConnectionUtil();
-			Connection c = con.getConnection("localhost", user.getUserName(), user.getPassword());
+			Connection c = con.getConnection(  user.getUserName(), user.getPassword());
 			if(!nameField.getText().isEmpty()) {
 	    		String sql = "UPDATE event SET event_Name =? WHERE event_id = ?";
 	    		try(PreparedStatement st = c.prepareStatement(sql)){

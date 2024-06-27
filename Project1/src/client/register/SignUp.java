@@ -1,4 +1,4 @@
-  package main;
+  package client.register;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,7 +25,7 @@ public class SignUp{
 			dbConnection conn = dbConnection.getInstance();
 			conn.register(userName, password);
 			ConnectionUtil c = new ConnectionUtil();
-			Connection con = c.getConnection("localhost", userName, password);
+			Connection con = c.getConnection(userName, password);
 			//lưu vào db tài khoản đã mã hóa => mã hóa cả username
 			String sql1 = "insert into user(name, email, password) values(?, ?, ?) ";
         	PreparedStatement st1 = con.prepareStatement(sql1);

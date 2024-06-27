@@ -14,7 +14,8 @@ import main.User;
 public class ConnectionUtil {
 	private Connection con;
 	private String svName, userName, password;
-	public static Connection getConnection(String svName, String userName, String password) {
+	public static Connection getConnection(String userName, String password) {
+		String svName ="localhost";
 		Connection conn = null;
 		String DB_URL = "jdbc:mysql://"+svName+":3306/eventmanagementapp";
         try {
@@ -34,7 +35,7 @@ public class ConnectionUtil {
 		//các cột id, request, join sẽ không cần mã hóa 
 		try{
             String addEvent = "INSERT INTO request_user (user_id, event_id, requested, `join`) VALUES (?, ?, ?, ?)";
-            try (Connection con = getConnection("localhost", user.getUserName(), user.getPassword())) {
+            try (Connection con = getConnection(  user.getUserName(), user.getPassword())) {
             	PreparedStatement pstmt = con.prepareStatement(addEvent);
             	if(event.isPrivate()) {
             		pstmt.setString(1, String.valueOf(user.getUserID()));
@@ -69,7 +70,7 @@ public class ConnectionUtil {
 	public void inviteUser(User user, String userName, int event_id){
 		int user_id = 0;
 		try{
-			Connection con = getConnection("localhost", user.getUserName(), user.getPassword());
+			Connection con = getConnection(  user.getUserName(), user.getPassword());
 			String findUser = "SELECT * FROM user WHERE name =?";
 			try(PreparedStatement st = con.prepareStatement(findUser)){
 				st.setString(1, Encryption.AESEncrypt(userName, Encryption.generateKey()));
@@ -115,7 +116,7 @@ public class ConnectionUtil {
     }
     public void updateJoinUser(String table, User host, User user, int event_id, boolean isSelect){
         try {
-        	Connection con = getConnection("localhost", host.getUserName(), host.getPassword());
+        	Connection con = getConnection(  host.getUserName(), host.getPassword());
             String addEvent = "UPDATE "+ table +" SET `join` = 1 WHERE user_id = ? AND event_id = ?";
             try (PreparedStatement pstmt = con.prepareStatement(addEvent)){
                 pstmt.setInt(1, user.getUserID());
@@ -142,7 +143,7 @@ public class ConnectionUtil {
     public void unJoinUser(User host, User user, int event_id ){
         String addEvent = null;
         try {
-        	Connection con = getConnection("localhost", host.getUserName(), host.getPassword());
+        	Connection con = getConnection(  host.getUserName(), host.getPassword());
         	String findEvent1 = "SELECT COUNT(*) FROM request_user WHERE user_id = ? AND event_id = ?";
         	try(PreparedStatement st = con.prepareStatement(findEvent1)){
         		st.setInt(1, user.getUserID());
