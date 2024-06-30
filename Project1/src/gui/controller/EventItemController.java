@@ -3,6 +3,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import javax.swing.JOptionPane;
+
 import database.ConnectionUtil;
 import database.dbConnection;
 import javafx.event.ActionEvent;
@@ -40,8 +42,7 @@ public class EventItemController {
 					rs.next();
 					if(rs.getInt(1) == 1) {
 						btnRequest.setStyle("-fx-background-color: #00ADB5");
-					}st.close();
-					st.close();
+					}
 				}String s = "SELECT COUNT(*) FROM invited_user WHERE user_id = ? AND event_id = ? ";
 				try(PreparedStatement st = c.prepareStatement(s)){
 					st.setInt(1, this.user.getUserID());
@@ -50,8 +51,7 @@ public class EventItemController {
 					ResultSet rs = st.executeQuery();
 					rs.next();
 					this.count = rs.getInt(1);
-					st.close();
-				}c.close();
+				}
 	    	}catch(Exception e) {
 	    		e.printStackTrace();
 	    	}
@@ -106,6 +106,10 @@ public class EventItemController {
             con.updateJoinUser("invited_user", this.user, this.user, this.event.getEventID(), this.event.isPrivate());
             if(this.event.isPrivate()) {
             	con.requestUser(user, event);
+            	JOptionPane.showMessageDialog(null, "Accept successfully! Please wait to approval.");
+            }else {
+            	JOptionPane.showMessageDialog(null, "Accept successfully!");
+            	con.requestUser(this.user, this.event);
             }
             String sql = "SELECT COUNT(*) FROM invited_user WHERE user_id = ? AND event_id = ? AND `join` = 1";
             try(PreparedStatement st = c.prepareStatement(sql);){
@@ -116,9 +120,8 @@ public class EventItemController {
     			rs.next();
     			if(rs.getInt(1)!= 0) {
     				btnAccept.setStyle("-fx-background-color: #00ADB5");
-    			}st.close();
-    			rs.close();
-            }c.close();
+    			}
+            }
     	}catch(Exception e) {
     		e.printStackTrace();
     	}
@@ -136,12 +139,12 @@ public class EventItemController {
 			st.setInt(2, this.event.getEventID());
 			
 			ResultSet rs = st.executeQuery();
+			rs.next();
 			if(rs.getInt(1) == 0) {
 				btnRequest.setStyle("-fx-background-color: #00ADB5");
 				con.requestUser(this.user, this.event);//public -> auto join
-			}rs.next();
-			st.close();
-			c.close();
+				JOptionPane.showMessageDialog(null, "Join successfully!");
+			}
             
         } catch (Exception e) {
             e.printStackTrace();

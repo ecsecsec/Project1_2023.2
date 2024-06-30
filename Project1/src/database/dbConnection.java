@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import javax.crypto.SecretKey;
+import javax.swing.JOptionPane;
 
 import encyption.Encryption;
 import encyption.hash;
@@ -79,17 +80,16 @@ public class dbConnection {
 				st.setString(1, userName);
 				st.setString(2,  pass);
 				st.executeUpdate();
-				st.close();
 				
 			}catch(SQLException e) {
 				System.out.println("User had existed!");
+				JOptionPane.showMessageDialog(null, "User had existed! Please try another user name.");
 				e.printStackTrace();
 			}
 			String grantPrivileges = "GRANT SELECT, INSERT, UPDATE, DELETE ON eventmanagementapp.* TO ?@'%'";
 			try (PreparedStatement st = con.prepareStatement(grantPrivileges)){
 				st.setString(1, userName);
 				st.executeUpdate();
-				st.close();
 			}catch(SQLException e) {
 				e.printStackTrace();
 			}
@@ -97,10 +97,10 @@ public class dbConnection {
 			try (PreparedStatement st = con.prepareStatement(flush)){
 				st.executeUpdate();
 				System.out.println("Created user successfully!");
-				st.close();
+				JOptionPane.showMessageDialog(null, "Created user successfully! Please log in to use.");
 			}catch(SQLException e) {
 				e.printStackTrace();
-			}con.close();
+			}
 			
 		}catch(Exception e) {
 			e.printStackTrace();

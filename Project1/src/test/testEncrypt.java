@@ -9,7 +9,7 @@ public class testEncrypt {
 	public static void main(String[] args) {
         try {
             SecretKey secretKey = Encryption.generateKey();
-            String encryptedString = Encryption.AESEncrypt("CountDown", secretKey);
+            String encryptedString = Encryption.AESEncrypt("123456789", secretKey);
             System.out.println("Encrypted String: " + encryptedString);
             System.out.println(Encryption.AESEncrypt("Ho Hoan Kiem", secretKey));
             System.out.println(Encryption.AESEncrypt("Merry Christmas", secretKey));

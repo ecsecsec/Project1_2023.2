@@ -4,6 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
+import javax.swing.JOptionPane;
+
 import database.ConnectionUtil;
 import encyption.Encryption;
 import javafx.event.ActionEvent;
@@ -81,17 +83,17 @@ public class CreateController {
     			st.setString(7, Encryption.AESEncrypt(nameField.getText(), Encryption.generateKey()));
     			st.executeUpdate();
     			System.out.println("Create event successfully!");
+    			JOptionPane.showMessageDialog(null, "Create event successfully!");
     			LocationField.clear();
     			nameField.clear();
     			descriptionField.clear();
     			checkboxIsPrivate.setSelected(false);
-    			st.close();
-    			c.close();
         	}catch(Exception e) {
         		e.printStackTrace();
         	}
     	}else {
     		System.out.println("Please fill all of information!");
+    		JOptionPane.showMessageDialog(null, "Please fill all of information!");
     	}
     }
 }

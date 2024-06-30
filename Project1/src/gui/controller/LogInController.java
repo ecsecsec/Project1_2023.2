@@ -1,6 +1,9 @@
 package gui.controller;
 
 import java.sql.SQLException;
+
+import javax.swing.JOptionPane;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -37,10 +40,16 @@ public class LogInController {
     private PasswordField passwordField;
 
 	@FXML
+	void btnForgotpasswordPressed(ActionEvent event) {
+		
+	}
+	
+	@FXML
 	void btnLoginPressed(ActionEvent event) throws SQLException {
 	    LogIn login = new LogIn(nameField.getText(), passwordField.getText());
 	    this.user = login;
 	    if (login.isCount()) {
+	    	JOptionPane.showMessageDialog(null, "Log in successfully!");
 	        try {
 	        	
 	            final String HOME = "/gui/view/Home.fxml";
@@ -64,6 +73,7 @@ public class LogInController {
 			}
 	    }else {
 	    	System.out.println("Password is wrong or User does not exits!");
+	    	JOptionPane.showMessageDialog(null, "Password is wrong or User does not exits!");
 	    	nameField.clear();
 	    	passwordField.clear();
 	    	

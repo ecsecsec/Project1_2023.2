@@ -10,8 +10,8 @@ import main.EventList;
 
 public class testdb {
     private static String DB_URL = "jdbc:mysql://127.0.0.1:3306/eventmanagementapp";
-    private static String USER_NAME = "root";
-    private static String PASSWORD = "1nhamrnhis2";
+    private static String USER_NAME = "project";
+    private static String PASSWORD = "123456789";
 
     public static void main(String[] args) {
         EventList eventList = new EventList();

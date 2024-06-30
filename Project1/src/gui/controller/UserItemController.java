@@ -83,7 +83,7 @@ public class UserItemController {
     	try {
     		ConnectionUtil con = new ConnectionUtil();
     		con.unJoinUser(this.user, this.user, this.event.getEventID());
-    		
+    		JOptionPane.showMessageDialog(null, "Remove successfully!");
     	}catch(Exception e) {
     		e.printStackTrace();
     	}
